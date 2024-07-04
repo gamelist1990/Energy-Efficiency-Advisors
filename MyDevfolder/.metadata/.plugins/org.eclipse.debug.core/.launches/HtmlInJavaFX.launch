@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/app/src/HtmlInJavaFX.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/setup/"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="HtmlInJavaFX"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="app"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="--module-path &quot;C:\Users\issei\Downloads\openjfx-21.0.3_windows-x64_bin-sdk\javafx-sdk-21.0.3\lib&quot;&#13;&#10;--add-modules javafx.controls,javafx.web&#13;&#10;--add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED&#13;&#10;--add-exports javafx.graphics/com.sun.glass.ui=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.glass.utils=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.font=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.geom.transform=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED &#13;&#10;--add-exports javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.scene.input=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.text=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.prism=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.prism.paint=ALL-UNNAMED &#13;&#10;--add-exports javafx.graphics/com.sun.scenario.effect=ALL-UNNAMED"/>
+</launchConfiguration>

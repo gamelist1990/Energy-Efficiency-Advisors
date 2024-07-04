@@ -1,0 +1,33 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class StreamChat {
+    public static void main(String[] args) {
+        try {
+            URL url = new URL("http://localhost:8000/stream");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Send POST request
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            String postParams = "param1=value1&param2=value2";  // Replace with your actual POST parameters
+            OutputStream os = connection.getOutputStream();
+            os.write(postParams.getBytes());
+            os.flush();
+            os.close();
+
+            // Now read the SSE
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

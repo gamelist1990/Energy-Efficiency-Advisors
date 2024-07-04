@@ -1,0 +1,53 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import org.json.JSONObject;
+
+public class StreamChat {
+    public static void main(String[] args) {
+        try {
+            URL url = new URL("http://192.168.128.193:5000/stream");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            // Set up the connection
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+
+            // Define parameters
+            String provider = "OpenAI";
+            String prompt = "こんにちは自己紹介をおねがいしますマークダウンの形式で回答";
+            String system = "";
+            String userId = "";
+            String token = "AI97067df5-84b9-4e7e-857b-20a08edf3c04";
+
+            // Create JSON string
+            String jsonInputString = String.format("{\"provider\": \"%s\", \"prompt\": \"%s\", \"system\": \"%s\", \"user_id\": \"%s\", \"token\": \"%s\"}", provider, prompt, system, userId, token);
+
+            // Send POST request
+            try(OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);           
+            }
+
+            // Now read the SSE
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("data: ")) {
+                    String jsonString = line.substring(6); // Remove "data: "
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    String value = jsonObject.getString("response");
+                    System.out.println(value);
+                }
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

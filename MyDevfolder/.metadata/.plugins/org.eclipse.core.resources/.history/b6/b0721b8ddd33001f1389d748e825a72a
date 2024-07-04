@@ -1,0 +1,6 @@
+{
+  "is_beta_enabled": true,
+  "provider": "Gemini",
+  "api_url": "https://webapi-8trs.onrender.com/stream",
+  "api_token": "AIbe876d8e-0db8-45ee-95fc-0ba97ac6a48e"
+}

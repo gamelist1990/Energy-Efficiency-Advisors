@@ -1,0 +1,6 @@
+{
+  "is_beta_enabled": true,
+  "api_token": "AI7addf065-1ae0-44a0-aa17-b57ca3e2858d",
+  "api_url": "https://webapi-8trs.onrender.com/stream",
+  "provider": "OpenAI"
+}

@@ -1,0 +1,50 @@
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
+import java.net.URI;
+import java.util.concurrent.CompletableFuture;
+
+public class StreamChat {
+
+    public static void main(String[] args) {
+        String url = "http://localhost:8000/stream"; // FastAPIのエンドポイントURL
+        String provider = "OpenAI"; // プロバイダー名 (OpenAI or Gemini)
+        String prompt = "こんにちは！"; // AIへの質問
+        String system = "あなたは優秀なAIアシスタントです"; // システムメッセージ
+        String token = "your_token"; // プロバイダーのトークン (必要な場合)
+
+        // JSONリクエストボディを作成
+        String requestBody = String.format("{\"provider\": \"%s\", \"prompt\": \"%s\", \"system\": \"%s\", \"token\": \"%s\"}", 
+                provider, prompt, system, token);
+
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .header("Content-Type", "application/json")
+                .build();
+
+        // 非同期でリクエストを送信し、レスポンスを処理
+        CompletableFuture<Void> responseFuture = client.sendAsync(request, BodyHandlers.ofLines())
+                .thenAcceptAsync(response -> {
+                    if (response.statusCode() == 200) {
+                        response.body().forEach(line -> {
+                            // "data: "プレフィックスを削除し、JSONをパースしてレスポンスを取得
+                            if (line.startsWith("data: ")) {
+                                String jsonResponse = line.substring("data: ".length());
+                                // JSONパース処理 (必要に応じてライブラリを使用)
+                                // 例：JSONObject jsonObject = new JSONObject(jsonResponse);
+                                // String responseText = jsonObject.getString("response");
+                                System.out.print(jsonResponse); // コンソールにレスポンスを表示
+                            }
+                        });
+                    } else {
+                        System.err.println("Error: " + response.statusCode());
+                    }
+                });
+
+        // 処理が完了するまで待機
+        responseFuture.join();
+    }
+}

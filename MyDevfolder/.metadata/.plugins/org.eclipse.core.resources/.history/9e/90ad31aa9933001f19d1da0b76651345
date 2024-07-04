@@ -1,0 +1,5 @@
+{
+  "api_token": "",
+  "api_url": "https://webapi-8trs.onrender.com/chat?provider\u003dGemini\u0026prompt\u003d",
+  "is_beta_enabled": true
+}

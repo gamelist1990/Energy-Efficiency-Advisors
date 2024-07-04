@@ -1,0 +1,16 @@
+import java.io.IOException;
+import java.nio.file.Paths;
+
+public class Launcher {
+    public static void main(String[] args) {
+        try {
+            String currentDir = Paths.get("").toAbsolutePath().toString(); // 現在のディレクトリを取得
+            String batFilePath = currentDir + "\\loads.bat"; // loads.batファイルへのパス
+
+            ProcessBuilder processBuilder = new ProcessBuilder(batFilePath);
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

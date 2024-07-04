@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="locationComboBox"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="locationComboBox"/>
+			<item value=" addBetaComponents"/>
+			<item value="table"/>
+			<item value="convertNewlines"/>
+			<item value="ヘッダー"/>
+			<item value="markdownToHtml"/>
+			<item value="パネル数"/>
+			<item value="RequestBody"/>
+			<item value="MediaType"/>
+			<item value="WebEngine webEngine = webView.getEngine();"/>
+			<item value="HttpClient client = HttpClient.newHttpClient();"/>
+			<item value="String aiResponse = "/>
+			<item value="savesettings"/>
+			<item value="save"/>
+			<item value="ico"/>
+		</list>
+		<list key="replacehistory">
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="317"/>
+		<item key="DIALOG_Y_ORIGIN" value="248"/>
+		<item key="DIALOG_WIDTH" value="511"/>
+		<item key="DIALOG_HEIGHT" value="523"/>
+		<item key="DIALOG_FONT_NAME" value="1|Yu Gothic UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Yu Gothic UI"/>
+	</section>
+</section>

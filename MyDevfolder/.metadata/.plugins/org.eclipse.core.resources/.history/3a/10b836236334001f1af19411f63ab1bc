@@ -1,0 +1,270 @@
+public class MarkdownConverter {
+
+    public static void main(String[] args) {
+        String markdown = "##\n"
+        		+ "太陽光発電システムのデータ分析とアドバイス\n"
+        		+ "\n"
+        		+ "**データ:**\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "パネル数:\n"
+        		+ "1枚\n"
+        		+ "*\n"
+        		+ "日照時間:\n"
+        		+ "1時間\n"
+        		+ "*\n"
+        		+ "1日の総発電量:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "設置場所:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "パネル設置角度:\n"
+        		+ "0度\n"
+        		+ "*\n"
+        		+ "設置年:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "システム容量:\n"
+        		+ "不明\n"
+        		+ "\n"
+        		+ "**アドバイス:**\n"
+        		+ "\n"
+        		+ "上記の情報のみでは、太陽光発電システムの分析や具体的なアドバイスを行うことはできません。発電量を判断するためには、以下の情報が必要です。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**1日の総発電量:**\n"
+        		+ "これは、太陽光発電システムの性能を評価する最も重要な指標の一つです。1日の総発電量が分かれば、システムの効率や発電量を予測することができます。\n"
+        		+ "*\n"
+        		+ "**設置場所:**\n"
+        		+ "設置場所の日射量によって、発電量は大きく左右されます。設置場所が分かれば、年間の発電量を予測することができます。\n"
+        		+ "*\n"
+        		+ "**システム容量:**\n"
+        		+ "システム容量は、太陽光パネルの枚数とパネルあたりの出力によって決まります。システム容量が分かれば、システムの規模を把握することができます。\n"
+        		+ "\n"
+        		+ "これらの情報に加え、以下のような情報があると、より詳細な分析やアドバイスを行うことができます。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "パネルの種類:\n"
+        		+ "パネルの種類によって、発電効率や性能が異なります。\n"
+        		+ "*\n"
+        		+ "パワーコンディショナーの種類:\n"
+        		+ "パワーコンディショナーは、直流の電力を交流に変換する機器です。パワーコンディショナーの種類によって、変換効率が異なります。\n"
+        		+ "*\n"
+        		+ "設置状況:\n"
+        		+ "パネルの周りの日当たりや、周辺に影を作るものがないかなどの設置状況も、発電量に影響を与えます。\n"
+        		+ "\n"
+        		+ "**情報収集方法**\n"
+        		+ "\n"
+        		+ "必要な情報を収集するには、以下の方法があります。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**太陽光発電システムのモニタリングシステム:**\n"
+        		+ "多くの太陽光発電システムには、発電量や日射量などを記録するモニタリングシステムが搭載されています。モニタリングシステムがあれば、必要な情報を簡単に収集することができます。\n"
+        		+ "*\n"
+        		+ "**電力会社:**\n"
+        		+ "電力会社によっては、太陽光発電の発電量に関するデータを提供している場合があります。\n"
+        		+ "*\n"
+        		+ "**専門業者:**\n"
+        		+ "太陽光発電の専門業者に依頼すれば、システムの分析やアドバイスを受けることができます。\n"
+        		+ "\n"
+        		+ "**アドバイス**\n"
+        		+ "\n"
+        		+ "必要な情報が収集できれば、以下のようなアドバイスを行うことができます。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**発電量の改善策:**\n"
+        		+ "日射量が少ない場合は、パネルの角度を調整したり、周辺の影を取り除いたりすることで、発電量を改善できる可能性があります。また、システム容量を増設したり、高効率なパネルに交換したりすることで、発電量を増やすこともできます。\n"
+        		+ "*\n"
+        		+ "**メンテナンス:**\n"
+        		+ "定期的なメンテナンスを行うことで、システムの性能を維持することができます。メンテナンスには、パネルの清掃や、パワーコンディショナーの点検などがあります。\n"
+        		+ "*\n"
+        		+ "**補助金・融資:**\n"
+        		+ "##\n"
+        		+ "太陽光発電システムのデータ分析とアドバイス\n"
+        		+ "\n"
+        		+ "**データ:**\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "パネル数:\n"
+        		+ "1枚\n"
+        		+ "*\n"
+        		+ "日照時間:\n"
+        		+ "1時間\n"
+        		+ "*\n"
+        		+ "1日の総発電量:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "設置場所:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "パネル設置角度:\n"
+        		+ "0度\n"
+        		+ "*\n"
+        		+ "設置年:\n"
+        		+ "不明\n"
+        		+ "*\n"
+        		+ "システム容量:\n"
+        		+ "不明\n"
+        		+ "\n"
+        		+ "**アドバイス:**\n"
+        		+ "\n"
+        		+ "上記の情報のみでは、太陽光発電システムの分析や具体的なアドバイスを行うことはできません。発電量を判断するためには、以下の情報が必要です。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**1日の総発電量:**\n"
+        		+ "これは、太陽光発電システムの性能を評価する最も重要な指標の一つです。1日の総発電量が分かれば、システムの効率や発電量を予測することができます。\n"
+        		+ "*\n"
+        		+ "**設置場所:**\n"
+        		+ "設置場所の日射量によって、発電量は大きく左右されます。設置場所が分かれば、年間の発電量を予測することができます。\n"
+        		+ "*\n"
+        		+ "**システム容量:**\n"
+        		+ "システム容量は、太陽光パネルの枚数とパネルあたりの出力によって決まります。システム容量が分かれば、システムの規模を把握することができます。\n"
+        		+ "\n"
+        		+ "これらの情報に加え、以下のような情報があると、より詳細な分析やアドバイスを行うことができます。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "パネルの種類:\n"
+        		+ "パネルの種類によって、発電効率や性能が異なります。\n"
+        		+ "*\n"
+        		+ "パワーコンディショナーの種類:\n"
+        		+ "パワーコンディショナーは、直流の電力を交流に変換する機器です。パワーコンディショナーの種類によって、変換効率が異なります。\n"
+        		+ "*\n"
+        		+ "設置状況:\n"
+        		+ "パネルの周りの日当たりや、周辺に影を作るものがないかなどの設置状況も、発電量に影響を与えます。\n"
+        		+ "\n"
+        		+ "**情報収集方法**\n"
+        		+ "\n"
+        		+ "必要な情報を収集するには、以下の方法があります。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**太陽光発電システムのモニタリングシステム:**\n"
+        		+ "多くの太陽光発電システムには、発電量や日射量などを記録するモニタリングシステムが搭載されています。モニタリングシステムがあれば、必要な情報を簡単に収集することができます。\n"
+        		+ "*\n"
+        		+ "**電力会社:**\n"
+        		+ "電力会社によっては、太陽光発電の発電量に関するデータを提供している場合があります。\n"
+        		+ "*\n"
+        		+ "**専門業者:**\n"
+        		+ "太陽光発電の専門業者に依頼すれば、システムの分析やアドバイスを受けることができます。\n"
+        		+ "\n"
+        		+ "**アドバイス**\n"
+        		+ "\n"
+        		+ "必要な情報が収集できれば、以下のようなアドバイスを行うことができます。\n"
+        		+ "\n"
+        		+ "*\n"
+        		+ "**発電量の改善策:**\n"
+        		+ "日射量が少ない場合は、パネルの角度を調整したり、周辺の影を取り除いたりすることで、発電量を改善できる可能性があります。また、システム容量を増設したり、高効率なパネルに交換したりすることで、発電量を増やすこともできます。\n"
+        		+ "*\n"
+        		+ "**メンテナンス:**\n"
+        		+ "定期的なメンテナンスを行うことで、システムの性能を維持することができます。メンテナンスには、パネルの清掃や、パワーコンディショナーの点検などがあります。\n"
+        		+ "*\n"
+        		+ "**補助金・融資:**\n"
+        		+ "太陽光発電システムの導入には、国や自治体から補助金が出る場合があります。また、金融機関から融資を受けることもできます。\n"
+        		+ "\n"
+        		+ "**その他**\n"
+        		+ "\n"
+        		+ "太陽光発電システムは、環境に優しい発電方法として注目されています。発電量だけでなく、環境への影響なども考慮して、太陽光発電システムを有効活用しましょう。";
+
+        System.out.println(markdownToHtml(markdown));
+    }
+
+    public static String markdownToHtml(String markdown) {
+        // ヘッダーを変換
+        markdown = convertHeaders(markdown);
+
+        // 強調、取り消し線、上付き文字、下付き文字を変換
+        markdown = convertEmphasis(markdown);
+
+        // リストを変換
+        markdown = convertLists(markdown);
+
+        // 引用ブロックを変換
+        markdown = convertBlockquotes(markdown);
+
+        // コードブロックを変換
+        markdown = convertCodeBlocks(markdown);
+
+        // 水平線を変換
+        markdown = convertHorizontalRules(markdown);
+
+        // テーブルを変換
+        markdown = convertTables(markdown);
+
+        // リンクと画像を変換
+        markdown = convertLinksAndImages(markdown);
+
+        return markdown;
+    }
+
+    // ヘッダーの変換
+    private static String convertHeaders(String markdown) {
+        markdown = markdown.replaceAll("^#\\s(.*)$", "<h1>$1</h1>");
+        markdown = markdown.replaceAll("^##\\s(.*)$", "<h2>$1</h2>");
+        markdown = markdown.replaceAll("^###\\s(.*)$", "<h3>$1</h3>");
+        markdown = markdown.replaceAll("^####\\s(.*)$", "<h4>$1</h4>");
+        markdown = markdown.replaceAll("^#####\\s(.*)$", "<h5>$1</h5>");
+        markdown = markdown.replaceAll("^######\\s(.*)$", "<h6>$1</h6>");
+        return markdown;
+    }
+
+    // 強調、取り消し線、上付き文字、下付き文字の変換
+    private static String convertEmphasis(String markdown) {
+        markdown = markdown.replaceAll("(\\*\\*|__)(.*?)\\1", "<strong>$2</strong>");
+        markdown = markdown.replaceAll("(\\*|_)(.*?)\\1", "<em>$2</em>");
+        markdown = markdown.replaceAll("~~(.*?)~~", "<del>$1</del>");
+        markdown = markdown.replaceAll("\\^(.*?)\\^", "<sup>$1</sup>");
+        markdown = markdown.replaceAll(",,(.*?),,", "<sub>$1</sub>");
+        return markdown;
+    }
+
+    // リストの変換
+    private static String convertLists(String markdown) {
+        markdown = markdown.replaceAll("^\\d+\\.\\s", "<li>");
+        markdown = markdown.replaceAll("^\\[\\s*(x| )\\]\\s", "<li><input type=\"checkbox\"$1 checked>");
+        markdown = markdown.replaceAll("^[-*+]\\s", "<li>");
+        markdown = markdown.replaceAll("<li>", "<ul><li>");
+        markdown = markdown.replaceAll("<li>\\s*\\<\\/ul\\>", "</ul>");
+        markdown = markdown.replaceAll("<li>", "<ol><li>");
+        markdown = markdown.replaceAll("<li>\\s*\\<\\/ol\\>", "</ol>");
+        return markdown;
+    }
+
+    // 引用ブロックの変換
+    private static String convertBlockquotes(String markdown) {
+        markdown = markdown.replaceAll("^>\\s(.*)$", "<blockquote>$1</blockquote>");
+        return markdown;
+    }
+
+    // コードブロックの変換
+    private static String convertCodeBlocks(String markdown) {
+        markdown = markdown.replaceAll("`([^`]*)`", "<code>$1</code>");
+        markdown = markdown.replaceAll("(?s)^```(.*)\\n(.*)\\n```", "<pre><code class=\"$1\">$2</code></pre>");
+        return markdown;
+    }
+
+    // 水平線の変換
+    private static String convertHorizontalRules(String markdown) {
+        markdown = markdown.replaceAll("^(?:[-*_]{3,})\\s*$", "<hr>");
+        return markdown;
+    }
+
+    // テーブルの変換
+    private static String convertTables(String markdown) {
+        markdown = markdown.replaceAll("^\\|?.*\\|?\\n(?:\\|.*\\|\\n)*\\|?\\n?", "<table>$0</table>");
+        markdown = markdown.replaceAll("^\\|(?:[-|=]{3,})\\|", "<thead>$0</thead>");
+        markdown = markdown.replaceAll("^\\|(?:[-|=]{2,})\\|", "<tr>$0</tr>");
+        markdown = markdown.replaceAll("^\\|?([^|]*)\\|?", "<th>$1</th>");
+        markdown = markdown.replaceAll("<thead>", "<thead><tr>");
+        markdown = markdown.replaceAll("</thead>", "</tr></thead>");
+        markdown = markdown.replaceAll("<tr>", "<tbody><tr>");
+        markdown = markdown.replaceAll("</tbody>", "</tr></tbody>");
+        return markdown;
+    }
+
+    // リンクと画像の変換
+    private static String convertLinksAndImages(String markdown) {
+        markdown = markdown.replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<a href=\"$2\">$1</a>");
+        markdown = markdown.replaceAll("\\!\\[(.*?)\\]\\((.*?)\\)", "<img src=\"$2\" alt=\"$1\">");
+        return markdown;
+    }
+}

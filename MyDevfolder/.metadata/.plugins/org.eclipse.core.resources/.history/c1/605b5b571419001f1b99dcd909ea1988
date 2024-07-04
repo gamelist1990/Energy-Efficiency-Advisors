@@ -1,0 +1,18 @@
+import java.io.IOException;
+
+public class Launcher {
+    public static void main(String[] args) {
+        try {
+            String currentDir = System.getProperty("user.dir"); // 現在のディレクトリを取得
+            String batPath = currentDir + "/loads.bat"; // loads.batファイルへのパス
+
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                "cmd", "/c", "start", "/B", batPath
+            );
+
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

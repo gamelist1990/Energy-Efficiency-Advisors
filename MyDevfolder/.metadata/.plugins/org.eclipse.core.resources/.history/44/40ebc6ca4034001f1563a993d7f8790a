@@ -1,0 +1,25 @@
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.sse.IncomingEvent;
+
+import org.glassfish.jersey.media.sse.SseFeature;
+
+public class StreamChat {
+    public static void main(String[] args) throws InterruptedException {
+        Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
+        WebTarget target = client.target(URI.create("http://localhost:8080/events"));
+
+        try (IncomingEvent event = target.request().get(IncomingEvent.class)) {
+            while (!event.isClosed()) {
+                if (event.hasNext()) {
+                    IncomingEvent.Message message = event.next(5, TimeUnit.SECONDS);
+                    System.out.println(message.getName() + ": " + message.readData(String.class));
+                }
+            }
+        }
+    }
+}

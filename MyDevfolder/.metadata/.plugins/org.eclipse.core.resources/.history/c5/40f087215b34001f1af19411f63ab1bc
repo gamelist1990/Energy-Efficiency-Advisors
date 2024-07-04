@@ -1,0 +1,217 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class MarkdownConverter {
+
+    private static final Pattern HEADER_PATTERN = Pattern.compile("(?m)^#{1,6}\\s(.*)$");
+    private static final Pattern ORDERED_LIST_PATTERN = Pattern.compile("(?m)^\\d+\\.\\s(.*)$");
+    private static final Pattern UNORDERED_LIST_PATTERN = Pattern.compile("(?m)^[*+-]\\s(.*)$");
+    private static final Pattern CHECKBOX_LIST_PATTERN = Pattern.compile("(?m)^\\[\\s*(x| )\\]\\s(.*)$");
+    private static final Pattern BLOCKQUOTE_PATTERN = Pattern.compile("(?m)^>\\s(.*)$");
+    private static final Pattern HORIZONTAL_RULE_PATTERN = Pattern.compile("(?m)^[-*_]{3,}$");
+    private static final Pattern CODE_BLOCK_PATTERN = Pattern.compile("(?ms)^```(.*)\\n(.*)\\n```", Pattern.DOTALL);
+    private static final Pattern LINK_PATTERN = Pattern.compile("!?\\[([^\\]]+)\\]\\(([^\\)]+)\\)");
+    private static final Pattern IMAGE_PATTERN = Pattern.compile("!\\[([^\\]]+)\\]\\(([^\\)]+)\\)");
+    private static final Pattern EMPHASIS_PATTERN = Pattern.compile("(?<!\\\\)(\\*\\*|__)(.*?)(\\*\\*|__)(?!\\*)");
+    private static final Pattern STRIKETHROUGH_PATTERN = Pattern.compile("(?<!\\\\)~~(.*?)~~(?!~)");
+    private static final Pattern SUPERSCRIPT_PATTERN = Pattern.compile("(?<!\\\\)\\^(.*?)\\^(?!\\^)");
+    private static final Pattern SUBSCRIPT_PATTERN = Pattern.compile("(?<!\\\\),,(.*?),,(?!,)");
+    private static final Pattern TABLE_PATTERN = Pattern.compile("(?ms)^\\|(.*?)\\n\\|?(?:[-|=]{2,})+\\|\\n(.*?)\\|", Pattern.DOTALL);
+
+    public static String markdownToHtml(String markdown) {
+        String html = markdown;
+
+        // ヘッダーを変換
+        html = convertHeaders(html);
+
+        // リストを変換
+        html = convertLists(html);
+
+        // 引用ブロックを変換
+        html = convertBlockquotes(html);
+
+        // 水平線を変換
+        html = convertHorizontalRules(html);
+
+        // コードブロックを変換
+        html = convertCodeBlocks(html);
+
+        // リンクと画像を変換
+        html = convertLinksAndImages(html);
+
+        // 強調、取り消し線、上付き文字、下付き文字を変換
+        html = convertEmphasis(html);
+
+        // テーブルを変換
+        html = convertTables(html);
+
+        // 改行文字をHTMLの改行タグに置き換える
+        html = html.replace("\n", "");
+
+        return html;
+    }
+
+    private static String convertHeaders(String markdown) {
+        Matcher matcher = HEADER_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String headerText = matcher.group(1);
+            int level = matcher.group().charAt(0) == '#' ? matcher.group().length() - 1 : 2;
+            matcher.appendReplacement(html, "<h" + level + ">" + headerText + "</h" + level + ">");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertLists(String markdown) {
+        // 順序付きリスト、入れ子になったリスト、チェックボックス付きリストを変換
+        markdown = convertOrderedAndNestedLists(markdown);
+
+        // 順序なしリストを変換
+        Matcher matcher = UNORDERED_LIST_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String listItem = matcher.group(1);
+            matcher.appendReplacement(html, "<li>" + listItem + "</li>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertOrderedAndNestedLists(String markdown) {
+        Matcher matcher = ORDERED_LIST_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String listItem = matcher.group(1);
+            matcher.appendReplacement(html, "<ol><li>" + listItem + "</li></ol>");
+        }
+        matcher.appendTail(html);
+
+        matcher = CHECKBOX_LIST_PATTERN.matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String checked = matcher.group(1).equals("x") ? " checked" : "";
+            String listItem = matcher.group(2);
+            matcher.appendReplacement(html, "<ul><li><input type=\"checkbox\"$checked>$listItem</li></ul>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertBlockquotes(String markdown) {
+        Matcher matcher = BLOCKQUOTE_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String quote = matcher.group(1);
+            matcher.appendReplacement(html, "<blockquote>" + quote + "</blockquote>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertHorizontalRules(String markdown) {
+        Matcher matcher = HORIZONTAL_RULE_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(html, "<hr>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertCodeBlocks(String markdown) {
+        Matcher matcher = CODE_BLOCK_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String language = matcher.group(1);
+            String code = matcher.group(2);
+            matcher.appendReplacement(html, "<pre><code class=\"" + language + "\">" + code + "</code></pre>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertLinksAndImages(String markdown) {
+        Matcher matcher = LINK_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String text = matcher.group(1);
+            String url = matcher.group(2);
+            if (matcher.group().charAt(0) == '!') {
+                matcher.appendReplacement(html, "<img src=\"" + url + "\" alt=\"" + text + "\">");
+            } else {
+                matcher.appendReplacement(html, "<a href=\"" + url + "\">" + text + "</a>");
+            }
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertEmphasis(String markdown) {
+        // 強調（太字、イタリック体）を変換
+        markdown = markdown.replaceAll("(?<!\\\\)__(.*?)__(?!_)", "<strong>$1</strong>");
+        markdown = markdown.replaceAll("(?<!\\\\)\\*(.*?)\\*(?!\\*)", "<em>$1</em>");
+
+        // 取り消し線、上付き文字、下付き文字を変換
+        Matcher matcher = EMPHASIS_PATTERN.matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String emphasisType = matcher.group(1);
+            String content = matcher.group(2);
+            if (emphasisType.equals("**") || emphasisType.equals("__")) {
+                matcher.appendReplacement(html, "<strong>" + content + "</strong>");
+            } else if (emphasisType.equals("*") || emphasisType.equals("_")) {
+                matcher.appendReplacement(html, "<em>" + content + "</em>");
+            }
+        }
+        matcher.appendTail(html);
+
+        // 取り消し線を変換
+        matcher = STRIKETHROUGH_PATTERN.matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String strikethrough = matcher.group(1);
+            matcher.appendReplacement(html, "<del>" + strikethrough + "</del>");
+        }
+        matcher.appendTail(html);
+
+        // 上付き文字と下付き文字を変換
+        matcher = SUPERSCRIPT_PATTERN.matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String superscript = matcher.group(1);
+            matcher.appendReplacement(html, "<sup>" + superscript + "</sup>");
+        }
+        matcher.appendTail(html);
+
+        matcher = SUBSCRIPT_PATTERN.matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String subscript = matcher.group(1);
+            matcher.appendReplacement(html, "<sub>" + subscript + "</sub>");
+        }
+        matcher.appendTail(html);
+
+        return html.toString();
+    }
+
+    private static String convertTables(String markdown) {
+        Matcher matcher = TABLE_PATTERN.matcher(markdown);
+        StringBuffer html = new
+        StringBuffer(markdown);
+    while (matcher.find()) {
+        String header = matcher.group(1);
+        String body = matcher.group(2);
+        String tableHtml = "<table>\n<thead>" + header + "</thead>\n<tbody>" + body + "</tbody>\n</table>";
+        matcher.appendReplacement(html, tableHtml);
+    }
+    matcher.appendTail(html);
+    return html.toString();
+}
+
+public static void main(String[] args) {
+    String markdown = "# Header\n* Item 1\n* Item 2\n## Subheader\n![Image](image.jpg)\n[Link](https://example.com)";
+    String html = markdownToHtml(markdown);
+    System.out.println(html);
+}
+}

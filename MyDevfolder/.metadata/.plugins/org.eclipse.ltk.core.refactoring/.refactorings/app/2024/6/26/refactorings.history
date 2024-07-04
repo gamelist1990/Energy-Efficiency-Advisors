@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="リソース名 &apos;app/src/index.html&apos; を &apos;index.java&apos; に変更します" description="リソース &apos;index.html&apos; の名前変更" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/index.html" name="index.java" stamp="1719422956949" updateReferences="true"/>
+</session>

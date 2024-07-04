@@ -1,0 +1,58 @@
+/* グレーのカラーテーマ */
+
+/* 全体の背景 */
+.root {
+    -fx-background-color: #f2f2f2; /* ライトグレーの背景色 */
+}
+
+/* メニューバー */
+.menu-bar {
+    -fx-background-color: #dcdcdc; /* メニューバーの背景色 */
+    -fx-border-color: #bfbfbf; /* ボーダー色 */
+    -fx-border-width: 0 0 1 0; /* 下ボーダーのみ追加 */
+}
+
+.menu-bar .menu {
+    -fx-text-fill: #333333; /* メニューバーのテキスト色 */
+}
+
+.menu-bar .menu .menu-item {
+    -fx-text-fill: #333333; /* メニューアイテムのテキスト色 */
+}
+
+/* ボタン */
+.button {
+    -fx-background-color: #808080; /* ボタンの背景色 */
+    -fx-text-fill: white; /* ボタンのテキスト色 */
+}
+
+/* ラベル */
+.label {
+    -fx-text-fill: #333333; /* ラベルのテキスト色 */
+}
+
+/* コンボボックス */
+.combo-box {
+    -fx-background-color: #ffffff; /* 白色の背景 */
+    -fx-border-color: #cccccc; /* ボーダーの色 */
+}
+
+/* スライダー */
+.slider .thumb {
+    -fx-background-color: #808080; /* スライダーのつまみの色 */
+}
+
+/* プログレスバー */
+.progress-bar {
+    -fx-accent: #808080; /* プログレスバーの色 */
+}
+
+/* WebView */
+.web-view {
+    -fx-background-color: #ffffff; /* WebViewの背景色 */
+}
+
+/* ウィンドウの丸みをつける */
+.root .pane {
+    -fx-background-radius: 20; /* ウィンドウの角丸 */
+}

@@ -1,0 +1,205 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Main {
+
+	public static void main(String[] args) {
+        String markdown = "## 太陽光発電システムのデータ分析とアドバイス\n\n" +
+                "**データ:**\n\n" +
+                "* パネル数: 1枚\n" +
+                "* 日照時間: 1時間\n" +
+                "* 1日の総発電量: 不明\n" +
+                "* 設置場所: 不明\n" +
+                "* パネル設置角度: 0度\n" +
+                "* 設置年: 不明\n" +
+                "* システム容量: 不明\n\n" +
+                "**アドバイス:**\n\n" +
+                "上記の情報のみでは... (中略) ...を考慮して、太陽光発電システムを有効活用しましょう。";
+
+        String html = markdownList(markdown);
+        System.out.println(html);
+    }
+
+    // マークダウンから HTML への変換処理を含む markdownList 関数
+
+	public static String markdownList(String markdown) {
+        // ヘッダーを変換
+        markdown = convertHeaders(markdown);
+
+        // リストを変換
+        markdown = convertLists(markdown);
+
+        // 引用ブロックを変換
+        markdown = convertBlockquotes(markdown);
+
+        // コードブロックを変換
+        markdown = convertCodeBlocks(markdown);
+
+        // リンクと画像を変換
+        markdown = convertLinksAndImages(markdown);
+
+        // 強調、取り消し線、上付き文字、下付き文字を変換
+        markdown = convertEmphasis(markdown);
+
+        // 水平線を変換
+        markdown = convertHorizontalRules(markdown);
+
+        // テーブルを変換
+        markdown = convertTables(markdown);
+
+        // 見出し 2 (##) に変換
+        markdown = markdown.replaceAll("^##\\s(.*)$", "<h2>$1</h2>");
+
+        // **太字** に変換
+        markdown = markdown.replaceAll("\\*\\*(.*?)\\*\\*", "<strong>$1</strong>");
+
+        // *イタリック* に変換
+        markdown = markdown.replaceAll("\\*(.*?)\\*", "<em>$1</em>");
+
+        return markdown;
+    }
+
+    // サブ関数としてマークダウンから HTML への変換処理を定義
+
+    private static String convertHeaders(String markdown) {
+        Matcher matcher = Pattern.compile("(?m)^#{1,6}\\s(.*)$").matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String headerText = matcher.group(1);
+            int level = matcher.group().charAt(0) == '#' ? matcher.group().length() - 1 : 2;
+            matcher.appendReplacement(html, "<h" + level + ">" + headerText + "</h" + level + ">");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertLists(String markdown) {
+        // 順序付きリスト、入れ子になったリスト、チェックボックス付きリストを変換
+        markdown = convertOrderedAndNestedLists(markdown);
+
+        Matcher matcher = Pattern.compile("(?m)^[*+-]\\s(.*)$").matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String listItem = matcher.group(1);
+            matcher.appendReplacement(html, "<li>" + listItem + "</li>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertOrderedAndNestedLists(String markdown) {
+        // 順序付きリスト、入れ子になったリスト、チェックボックス付きリストを変換
+        markdown = markdown.replaceAll("(?m)^\\d+\\.\\s(.*)$", "<ol><li>$1</li></ol>");
+        markdown = markdown.replaceAll("(?m)^\\[\\s*(x| )\\]\\s(.*)$", "<ul><li><input type=\"checkbox\"$1>$2</li></ul>");
+        return markdown;
+    }
+
+    private static String convertBlockquotes(String markdown) {
+        // 引用ブロックを変換
+        Matcher matcher = Pattern.compile("(?m)^>\\s(.*)$").matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String quote = matcher.group(1);
+            matcher.appendReplacement(html, "<blockquote>" + quote + "</blockquote>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertCodeBlocks(String markdown) {
+        // コードブロックを変換
+        Matcher matcher = Pattern.compile("(?ms)^```(.*)\\n(.*)\\n```", Pattern.DOTALL).matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String language = matcher.group(1);
+            String code = matcher.group(2);
+            matcher.appendReplacement(html, "<pre><code class=\"" + language + "\">" + code + "</code></pre>");
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertLinksAndImages(String markdown) {
+        // リンクと画像を変換
+        Matcher matcher = Pattern.compile("!?\\[([^\\]]+)\\]\\(([^\\)]+)\\)").matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String text = matcher.group(1);
+            String url = matcher.group(2);
+            if (matcher.group().charAt(0) == '!') {
+                matcher.appendReplacement(html, "<img src=\"" + url + "\" alt=\"" + text + "\">");
+            } else {
+                matcher.appendReplacement(html, "<a href=\"" + url + "\">" + text + "</a>");
+            }
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+
+    private static String convertEmphasis(String markdown) {
+        // 強調、取り消し線、上付き文字、下付き文字を変換
+        markdown = markdown.replaceAll("(?<!\\\\)__(.*?)__(?!_)", "<strong>$1</strong>");
+        markdown = markdown.replaceAll("(?<!\\\\)\\*(.*?)\\*(?!\\*)", "<em>$1</em>");
+
+        Matcher matcher = Pattern.compile("(?<!\\\\)(\\*\\*|__)(.*?)(\\*\\*|__)(?!\\*)").matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String emphasisType = matcher.group(1);
+            String content = matcher.group(2);
+            if (emphasisType.equals("**") || emphasisType.equals("__")) {
+                matcher.appendReplacement(html, "<strong>" + content + "</strong>");
+            } else if (emphasisType.equals("*") || emphasisType.equals("_")) {
+                matcher.appendReplacement(html, "<em>" + content + "</em>");
+            }
+        }
+        matcher.appendTail(html);
+
+        // 取り消し線を変換
+        matcher = Pattern.compile("(?<!\\\\)~~(.*?)~~(?!~)").matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String strikethrough = matcher.group(1);
+            matcher.appendReplacement(html, "<del>" + strikethrough + "</del>");
+        }
+        matcher.appendTail(html);
+
+        // 上付き文字と下付き文字を変換
+        matcher = Pattern.compile("(?<!\\\\)\\^(.*?)\\^(?!\\^)").matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String superscript = matcher.group(1);
+            matcher.appendReplacement(html, "<sup>" + superscript + "</sup>");
+        }
+        matcher.appendTail(html);
+
+        matcher = Pattern.compile("(?<!\\\\),,(.*?),,(?!,)").matcher(html.toString());
+        html = new StringBuffer();
+        while (matcher.find()) {
+            String subscript = matcher.group(1);
+            matcher.appendReplacement(html, "<sub>" + subscript + "</sub>");
+        }
+        matcher.appendTail(html);
+
+        return html.toString();
+    }
+
+    private static String convertHorizontalRules(String markdown) {
+        // 水平線を変換
+        markdown = markdown.replaceAll("(?m)^[-*_]{3,}$", "<hr>");
+        return markdown;
+    }
+
+    private static String convertTables(String markdown) {
+        // テーブルを変換
+        Matcher matcher = Pattern.compile("(?ms)^\\|(.*?)\\n\\|?(?:[-|=]{2,})+\\|\\n(.*?)\\|", Pattern.DOTALL).matcher(markdown);
+        StringBuffer html = new StringBuffer();
+        while (matcher.find()) {
+            String header = matcher.group(1);
+            String body = matcher.group(2);
+            String tableHtml = "<table>\n<thead>" + header + "</thead>\n<tbody>" + body + "</tbody>\n</table>";
+            matcher.appendReplacement(html, tableHtml);
+        }
+        matcher.appendTail(html);
+        return html.toString();
+    }
+}

@@ -1,0 +1,24 @@
+import java.io.*;
+
+public class Launcher {
+    public static void main(String[] args) {
+        try {
+            String javaPath = "path/to/java"; // JavaFXアプリケーションを実行するJREへのパス
+            String jarPath = "path/to/application.jar"; // JavaFXアプリケーションのjarファイルへのパス
+
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                javaPath,
+                "--module-path", "path/to/javafx/sdk",
+                "--add-modules", "javafx.controls,javafx.web",
+                "--add-exports", "javafx.base/com.sun.javafx.logging=ALL-UNNAMED",
+                // 他のVMオプションをここに追加...
+                "-jar", jarPath
+            );
+
+            Process process = processBuilder.start();
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}

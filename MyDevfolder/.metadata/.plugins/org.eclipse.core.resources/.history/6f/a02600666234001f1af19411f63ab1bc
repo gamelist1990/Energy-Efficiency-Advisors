@@ -1,0 +1,116 @@
+public class MarkdownConverter {
+
+    public static void main(String[] args) {
+        String markdown = "# 太陽光発電システムのデータ分析とアドバイス\n\n" +
+                "## 概要\n\n" +
+                "太陽光発電システムのデータ分析とアドバイスに関するドキュメントです。\n\n" +
+                "### データ\n\n" +
+                "... (中略) ...\n\n" +
+                "## アドバイス\n\n" +
+                "... (中略) ...\n\n" +
+                "### 結論\n\n" +
+                "太陽光発電システムを有効活用しましょう。";
+
+        System.out.println(markdownToHtml(markdown));
+    }
+
+    public static String markdownToHtml(String markdown) {
+        // ヘッダーを変換
+        markdown = convertHeaders(markdown);
+
+        // 強調、取り消し線、上付き文字、下付き文字を変換
+        markdown = convertEmphasis(markdown);
+
+        // リストを変換
+        markdown = convertLists(markdown);
+
+        // 引用ブロックを変換
+        markdown = convertBlockquotes(markdown);
+
+        // コードブロックを変換
+        markdown = convertCodeBlocks(markdown);
+
+        // 水平線を変換
+        markdown = convertHorizontalRules(markdown);
+
+        // テーブルを変換
+        markdown = convertTables(markdown);
+
+        // リンクと画像を変換
+        markdown = convertLinksAndImages(markdown);
+
+        return markdown;
+    }
+
+    // ヘッダーの変換
+    private static String convertHeaders(String markdown) {
+        markdown = markdown.replaceAll("^#\\s(.*)$", "<h1>$1</h1>");
+        markdown = markdown.replaceAll("^##\\s(.*)$", "<h2>$1</h2>");
+        markdown = markdown.replaceAll("^###\\s(.*)$", "<h3>$1</h3>");
+        markdown = markdown.replaceAll("^####\\s(.*)$", "<h4>$1</h4>");
+        markdown = markdown.replaceAll("^#####\\s(.*)$", "<h5>$1</h5>");
+        markdown = markdown.replaceAll("^######\\s(.*)$", "<h6>$1</h6>");
+        return markdown;
+    }
+
+    // 強調、取り消し線、上付き文字、下付き文字の変換
+    private static String convertEmphasis(String markdown) {
+        markdown = markdown.replaceAll("(\\*\\*|__)(.*?)\\1", "<strong>$2</strong>");
+        markdown = markdown.replaceAll("(\\*|_)(.*?)\\1", "<em>$2</em>");
+        markdown = markdown.replaceAll("~~(.*?)~~", "<del>$1</del>");
+        markdown = markdown.replaceAll("\\^(.*?)\\^", "<sup>$1</sup>");
+        markdown = markdown.replaceAll(",,(.*?),,", "<sub>$1</sub>");
+        return markdown;
+    }
+
+    // リストの変換
+    private static String convertLists(String markdown) {
+        markdown = markdown.replaceAll("^\\d+\\.\\s", "<li>");
+        markdown = markdown.replaceAll("^\\[\\s*(x| )\\]\\s", "<li><input type=\"checkbox\"$1 checked>");
+        markdown = markdown.replaceAll("^[-*+]\\s", "<li>");
+        markdown = markdown.replaceAll("<li>", "<ul><li>");
+        markdown = markdown.replaceAll("<li>\\s*\\<\\/ul\\>", "</ul>");
+        markdown = markdown.replaceAll("<li>", "<ol><li>");
+        markdown = markdown.replaceAll("<li>\\s*\\<\\/ol\\>", "</ol>");
+        return markdown;
+    }
+
+    // 引用ブロックの変換
+    private static String convertBlockquotes(String markdown) {
+        markdown = markdown.replaceAll("^>\\s(.*)$", "<blockquote>$1</blockquote>");
+        return markdown;
+    }
+
+    // コードブロックの変換
+    private static String convertCodeBlocks(String markdown) {
+        markdown = markdown.replaceAll("`([^`]*)`", "<code>$1</code>");
+        markdown = markdown.replaceAll("(?s)^```(.*)\\n(.*)\\n```", "<pre><code class=\"$1\">$2</code></pre>");
+        return markdown;
+    }
+
+    // 水平線の変換
+    private static String convertHorizontalRules(String markdown) {
+        markdown = markdown.replaceAll("^(?:[-*_]{3,})\\s*$", "<hr>");
+        return markdown;
+    }
+
+    // テーブルの変換
+    private static String convertTables(String markdown) {
+        markdown = markdown.replaceAll("^\\|?.*\\|?\\n(?:\\|.*\\|\\n)*\\|?\\n?", "<table>$0</table>");
+        markdown = markdown.replaceAll("^\\|(?:[-|=]{3,})\\|", "<thead>$0</thead>");
+        markdown = markdown.replaceAll("^\\|(?:[-|=]{2,})\\|", "<tr>$0</tr>");
+        markdown = markdown.replaceAll("^\\|?([^|]*)\\|?", "<th>$1</th>");
+        markdown = markdown.replaceAll("<thead>", "<thead><tr>");
+        markdown = markdown.replaceAll("</thead>", "</tr></thead>");
+        markdown = markdown.replaceAll("<tr>", "<tbody><tr>");
+        markdown = markdown.replaceAll("</tbody>", "</tr></tbody>");
+        return markdown;
+    }
+
+    // リンクと画像の変換
+    private static String convertLinksAndImages(String markdown) {
+        markdown = markdown.replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<a href=\"$2\">$1</a>");
+        markdown = markdown.replaceAll("\\!\\[(.*?)\\]\\((.*?)\\)", "<img src=\"$2\" alt=\"$1\">");
+        return markdown;
+    }
+}

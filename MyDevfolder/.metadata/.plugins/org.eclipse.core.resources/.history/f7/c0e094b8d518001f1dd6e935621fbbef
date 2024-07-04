@@ -1,0 +1,370 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.Year;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.Stage;
+
+
+
+public class EnergyAdvisorApp extends Application {
+	
+	@SuppressWarnings("unused")
+	private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private static boolean isBetaEnabled = false;
+    private static Label betaStatusLabel;
+    private static ProgressBar progressBar;
+    private static Button analyzeButton;
+    private static Label panelCountLabel;
+    private static Label sunshineTimeLabel;
+    private static Label generationLabel;
+    private static TextField generationField;
+    private static Label locationLabel;
+    private static Label installationTimeLabel;
+    private static TextField installationTimeField;
+    private static Label systemCapacityLabel;
+    private static TextField systemCapacityField;
+    private static Label purposeLabel;
+    private static TextField purposeField;
+    private static Slider angleScale;
+    private static Label angleLabel;
+    private static Label currentAngleLabel;
+    private static ComboBox<String> locationComboBox;
+    private static int currentYear = Year.now().getValue();
+    private WebView webview;
+    
+    
+
+    @Override
+    public void start(Stage primaryStage) {
+        loadSettings();
+
+        primaryStage.setTitle("エネルギー効率改善アドバイザー");
+        primaryStage.getIcons().add(new Image("https://raw.githubusercontent.com/Gamelist2023/lol/main/app.ico"));
+
+        // メニューバーの作成
+        MenuBar menuBar = new MenuBar();
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        
+
+        Menu settingsMenu = new Menu("設定");
+        MenuItem toggleBetaItem = new MenuItem("Beta版を有効/無効にする");
+        toggleBetaItem.setOnAction(e -> toggleBeta());
+        settingsMenu.getItems().add(toggleBetaItem);
+
+        MenuItem versionItem = new MenuItem("現在のバージョン0.2");
+        versionItem.setOnAction(e -> showVersion());
+        settingsMenu.getItems().add(versionItem);
+
+        menuBar.getMenus().add(settingsMenu);
+
+        Menu helpMenu = new Menu("ヘルプ");
+        MenuItem helpItem = new MenuItem("使い方");
+        helpItem.setOnAction(e -> showHelp());
+        helpMenu.getItems().add(helpItem);
+
+        menuBar.getMenus().add(helpMenu);
+
+        // コンポーネントの作成
+        betaStatusLabel = new Label("Beta版: " + (isBetaEnabled ? "有効" : "無効"));
+        Label readLabel = new Label("Beta版の有効/無効は設定から変更できます");
+        Label descriptionLabel = new Label("エネルギー使用状況と太陽光発電のデータを入力してください。");
+        Label panelLabel = new Label("太陽光パネルの数を指定してください（最大30）：");
+        Slider panelScale = new Slider(1, 30, 1);
+        panelCountLabel = new Label("現在のパネル数: " + (int) panelScale.getValue());
+        Label sunshineLabel = new Label("日照時間を指定してください（最大24時間）：");
+        Slider sunshineScale = new Slider(1, 24, 1);
+        sunshineTimeLabel = new Label("現在の日照時間: " + (int) sunshineScale.getValue() + "時間");
+
+        generationLabel = new Label("1日の総発電量 (kWh) を入力してください：");
+        generationField = new TextField();
+        generationLabel.setVisible(isBetaEnabled);
+        generationField.setVisible(isBetaEnabled);
+       
+        
+
+
+        locationLabel = new Label("お住まいの地域を選択してください：");
+        locationLabel.setVisible(isBetaEnabled);
+        String[] prefectures = {"北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"};
+        locationComboBox = new ComboBox<>();
+        locationComboBox.getItems().addAll(prefectures);
+        locationComboBox.setVisible(isBetaEnabled);
+       
+
+        angleLabel = new Label("設置角度を指定してください（最大180°）：");
+        angleLabel.setVisible(isBetaEnabled);
+        angleScale = new Slider(0, 180, 0);
+        angleScale.setVisible(isBetaEnabled);
+        currentAngleLabel = new Label("現在の設置角度: " + (int) angleScale.getValue() + "°  ");
+        currentAngleLabel.setVisible(isBetaEnabled);
+       
+        
+
+        installationTimeLabel = new Label("太陽光発電システムを設置した年を入力してください例,1990年：");
+        installationTimeLabel.setVisible(isBetaEnabled);
+        installationTimeField = new TextField();
+        installationTimeField.setVisible(isBetaEnabled);
+       
+        
+        
+
+        systemCapacityLabel = new Label("太陽光発電システム全体の容量 (kW) を入力してください：");
+        systemCapacityLabel.setVisible(isBetaEnabled);
+        systemCapacityField = new TextField();
+        systemCapacityField.setVisible(isBetaEnabled);
+  
+        
+
+        purposeLabel = new Label("アドバイスを求める具体的な目的を入力してください（例: 発電量を増やしたい、売電収入を増やしたい、故障が心配）：");
+        purposeLabel.setVisible(isBetaEnabled);
+        purposeField = new TextField();
+        purposeField.setVisible(isBetaEnabled);
+
+
+        Label aiRead = new Label("BETA版が有効の場合にはAIがアドバイスを生成しますただし少し時間が掛かるよ！");
+   
+        progressBar = new ProgressBar();
+        progressBar.setVisible(false);
+        analyzeButton = new Button("実行");
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
+
+        // メニューバーを最初に追加します。
+        gridPane.add(menuBar, 0, 0, 3, 1);
+
+        gridPane.add(betaStatusLabel, 0, 1);
+        gridPane.add(readLabel, 0, 2);
+        gridPane.add(descriptionLabel, 0, 3);
+        gridPane.add(panelLabel, 0, 4);
+        gridPane.add(panelScale, 1, 4);
+        gridPane.add(panelCountLabel, 2, 4);
+        gridPane.add(sunshineLabel, 0, 5);
+        gridPane.add(sunshineScale, 1, 5);
+        gridPane.add(sunshineTimeLabel, 2, 5);
+        gridPane.add(generationLabel, 0, 6);
+        gridPane.add(generationField, 1, 6);
+        gridPane.add(locationLabel, 0, 7);
+        gridPane.add(locationComboBox, 1, 7);
+        gridPane.add(angleLabel, 0, 8);
+        gridPane.add(angleScale, 1, 8);
+        gridPane.add(currentAngleLabel, 2, 8);
+        gridPane.add(installationTimeLabel, 0, 9);
+        gridPane.add(installationTimeField, 1, 9);
+        gridPane.add(systemCapacityLabel, 0, 10);
+        gridPane.add(systemCapacityField, 1, 10);
+        gridPane.add(purposeLabel, 0, 11);
+        gridPane.add(purposeField, 1, 11);
+        gridPane.add(aiRead, 0, 12);
+        gridPane.add(webView, 0, 16, 3, 1);
+        gridPane.add(progressBar, 0, 14, 3, 1);
+        gridPane.add(analyzeButton, 0, 15, 3, 1);
+        
+        descriptionLabel.setWrapText(true);
+        panelLabel.setWrapText(true);
+        sunshineLabel.setWrapText(true);
+        sunshineTimeLabel.setWrapText(true);
+        panelCountLabel.setWrapText(true);
+        generationLabel.setWrapText(true);
+        locationLabel.setWrapText(true);
+        angleLabel.setWrapText(true);
+        installationTimeLabel.setWrapText(true);
+        systemCapacityLabel.setWrapText(true);
+        purposeLabel.setWrapText(true);
+        aiRead.setWrapText(true);
+
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(10);
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setPercentWidth(20);
+        ColumnConstraints column3 = new ColumnConstraints();
+        column3.setPercentWidth(10);
+        gridPane.getColumnConstraints().addAll(column1, column2, column3);
+
+
+        panelScale.valueProperty().addListener((observable, oldValue, newValue) -> panelCountLabel.setText("現在のパネル数: " + newValue.intValue()));
+        sunshineScale.valueProperty().addListener((observable, oldValue, newValue) -> sunshineTimeLabel.setText("現在の日照時間: " + newValue.intValue() + "時間"));
+        angleScale.valueProperty().addListener((observable, oldValue, newValue) -> currentAngleLabel.setText("現在の設置角度: " + newValue.intValue() + "°"));
+
+        analyzeButton.setOnAction(e -> onAnalyzeButtonClick((int) panelScale.getValue(), (int) sunshineScale.getValue(), webView, webEngine));
+        primaryStage.setScene(new Scene(gridPane, 910, 700));
+        primaryStage.show();
+
+
+    }
+
+    private void toggleBeta() {
+        isBetaEnabled = !isBetaEnabled;
+        betaStatusLabel.setText("Beta版: " + (isBetaEnabled ? "有効" : "無効"));
+        generationLabel.setVisible(isBetaEnabled);
+        generationField.setVisible(isBetaEnabled);
+        locationLabel.setVisible(isBetaEnabled);
+        installationTimeLabel.setVisible(isBetaEnabled);
+        installationTimeField.setVisible(isBetaEnabled);
+        systemCapacityLabel.setVisible(isBetaEnabled);
+        angleLabel.setVisible(isBetaEnabled);
+        currentAngleLabel.setVisible(isBetaEnabled);
+        systemCapacityField.setVisible(isBetaEnabled);
+        purposeLabel.setVisible(isBetaEnabled);
+        angleScale.setVisible(isBetaEnabled);
+        locationComboBox.setVisible(isBetaEnabled);
+        purposeField.setVisible(isBetaEnabled);
+        saveSettings();
+    }
+
+    private void showVersion() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("バージョン情報");
+        alert.setHeaderText(null);
+        alert.setContentText("バージョン: 1.0");
+        alert.showAndWait();
+    }
+
+    private void showHelp() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("ヘルプ");
+        alert.setHeaderText(null);
+        alert.setContentText("エネルギー効率改善アドバイザーの使い方:\n" +
+                "1. 太陽光パネルの数をスライダーで指定します（最大30）。\n" +
+                "2. 日照時間をスライダーで指定します（最大24時間）。\n" +
+                "3. '実行'ボタンをクリックします。\n" +
+                "4. AIがアドバイスを生成し、テキストボックスに表示します。\n" +
+                "注意: Beta版が有効の場合、AIがより詳細なアドバイスを提供します。\n" +
+                "5.AIは自作のWEBAPIです");
+        alert.showAndWait();
+    }
+
+    private void loadSettings() {
+        File settingsFile = new File("settings.json");
+        if (settingsFile.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(settingsFile))) {
+                String settings = reader.readLine();
+                isBetaEnabled = settings.contains("\"is_beta_enabled\":true");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveSettings() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.json"))) {
+            writer.write("{\"is_beta_enabled\":" + isBetaEnabled + "}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onAnalyzeButtonClick(int panelCount, int sunshineTime, WebView webView, WebEngine webEngine) {
+        analyzeButton.setDisable(true);
+        progressBar.setVisible(true);
+
+        String generation = generationField.getText();
+        String selectedPrefecture = locationComboBox.getValue();
+        int angle = (int) angleScale.getValue();
+        String installationYearText = installationTimeField.getText();
+        String systemCapacity = systemCapacityField.getText();
+        String purpose = purposeField.getText();
+
+        new Thread(() -> {
+            try {
+                String aiResponse = calculateSolarPower(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
+                String html = markdownToHtml(aiResponse);
+                Platform.runLater(() -> webEngine.loadContent(html)); // この行を追加します。
+            } catch (Exception e) {
+            	showError("エラー", "アドバイスの生成中にエラーが発生しました。");
+            }
+            progressBar.setVisible(false);
+            analyzeButton.setDisable(false);
+        }).start();
+    }
+
+    private String calculateSolarPower(int panelCount, int sunshineTime, String generation, String selectedPrefecture, int angle, String installationYearText, String systemCapacity, String purpose) throws Exception {
+        double powerPerPanel = 0.2; // kW
+        double solarPower = panelCount * sunshineTime * powerPerPanel;
+        if (isBetaEnabled) {
+            return getAdviceFromAI(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
+        } else {
+            return "あなたの太陽光発電システムは、1日あたり約" + solarPower + "kWhの電力を生成します。もし詳細な情報を知りたい場合にはBeta版を有効にしてみてください。現時点2024/5/22の段階ではまだ未完成です";
+        }
+    }
+
+    private String getAdviceFromAI(int panelCount, int sunshineTime, String generation, String selectedPrefecture, int angle, String installationYearText, String systemCapacity, String purpose) throws Exception {
+        String apiUrl = "https://webapi-8trs.onrender.com/ask?text=";
+        String question = "質問内容は以下通りです:太陽光発電のデータが次のような場合、どのようなアドバイスがありますか？ パネル数: " + panelCount + ", 日照時間: " + sunshineTime + "時間, 1日の総発電量(kWh): " + generation + ", どこに住んでいるか: " + selectedPrefecture + ", ソーラーパネルの設置角度: " + angle + "°, 設置した年(現在の日付は"+currentYear+"年です):" + installationYearText + ", 太陽光発電システム全体の容量(kW): " + systemCapacity + ", アドバイスを求める具体的な目的: " + purpose + "。回答形式：この回答ではユーザーが分かりやすくする為リストアップ形式で出力またできるだけ分かりやすいようにまたセキュリティ関係上これだけしか情報が提供できませんご了承ください";
+        String encodedQuestion = URLEncoder.encode(question, StandardCharsets.UTF_8.toString());
+        URL url = new URL(apiUrl + encodedQuestion);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setDoOutput(true);
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
+        }
+    }
+    private static String markdownToHtml(String markdown) {
+
+		Parser parser = Parser.builder().build();
+        Node document = parser.parse(markdown);
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+        String html = renderer.render(document);
+
+        // 改行文字をHTMLの改行タグに置き換える
+        final String finalHtml = html.replace("\\n", "<br>");
+        
+		return finalHtml;
+	}
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
