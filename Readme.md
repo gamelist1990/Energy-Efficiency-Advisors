@@ -1,6 +1,6 @@
 ## ソフトウェアの説明 Ver0.9
 
-[English](ReadmeEN.md) | [日本語](Readme.md) 
+[English](ReadmeEn.md) | [日本語](Readme.md) 
 
 ### お知らせ
 - ver0.9 webapiのストリーミング処理を実験機能として搭載しました（）不安定：特にOpenAI
