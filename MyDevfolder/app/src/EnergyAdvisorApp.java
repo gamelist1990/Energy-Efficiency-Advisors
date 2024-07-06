@@ -307,8 +307,8 @@ public class EnergyAdvisorApp extends Application {
     
     private void switchAiModel() {
         if (apiUrl.equals("Gemini")) {
-            apiUrl = "OpenAI";
-           show_ui("変更","OpenAIモデルに切り替えました");
+            apiUrl = "HuggingChat";
+           show_ui("変更","HuggingChatモデルに切り替えました");
         } else {
             apiUrl = "Gemini";
             show_ui("変更","Geminiモデルに切り替えました");
@@ -393,7 +393,7 @@ public class EnergyAdvisorApp extends Application {
         WebEngine webEngine = webView.getEngine();
 
         Menu settingsMenu = new Menu("設定");
-        MenuItem toggleBetaItem = new MenuItem("Beta版を有効/無効にする");
+        MenuItem toggleBetaItem = new MenuItem("AIを有効/無効にする");
         MenuItem createapi = new MenuItem("Tokenを発行");
         MenuItem exitItem = new MenuItem("終了");
         MenuItem aimodel = new MenuItem("AIモデルの切り替え");
@@ -453,14 +453,18 @@ public class EnergyAdvisorApp extends Application {
 
         menuBar.getMenus().add(helpMenu);
 
-        betaStatusLabel = new Label("Beta版: " + (isBetaEnabled ? "有効" : "無効"));
-        Label readLabel = new Label("Beta版の有効/無効は設定から変更できます");
+        betaStatusLabel = new Label("AIの使用: " + (isBetaEnabled ? "有効" : "無効"));
+        Label readLabel = new Label("AIの有効/無効は設定から変更できます");
         Label descriptionLabel = new Label("エネルギー使用状況と太陽光発電のデータを入力してください。");
         Label panelLabel = new Label("太陽光パネルの数を指定してください（最大30）：");
         Slider panelScale = new Slider(1, 30, 1);
         panelCountLabel = new Label("現在のパネル数: " + (int) panelScale.getValue());
         Label sunshineLabel = new Label("日照時間を指定してください（最大24時間）：");
         Slider sunshineScale = new Slider(1, 24, 1);
+        
+        installationTimeLabel = new Label("太陽光発電システムを設置した年を入力してください例,2023：");
+        installationTimeField = new TextField();
+        
         sunshineTimeLabel = new Label("現在の日照時間: " + (int) sunshineScale.getValue() + "時間");
 
         generationLabel = new Label("1日の総発電量 (kWh) を入力してください：");
@@ -475,8 +479,7 @@ public class EnergyAdvisorApp extends Application {
         angleScale = new Slider(0, 180, 0);
         currentAngleLabel = new Label("現在の設置角度: " + (int) angleScale.getValue() + "°");
 
-        installationTimeLabel = new Label("太陽光発電システムを設置した年を入力してください例,1990年：");
-        installationTimeField = new TextField();
+       
 
         systemCapacityLabel = new Label("太陽光発電システム全体の容量 (kW) を入力してください：");
         systemCapacityField = new TextField();
@@ -484,7 +487,7 @@ public class EnergyAdvisorApp extends Application {
         purposeLabel = new Label("アドバイスを求める具体的な目的を簡潔に入力してください（例: 発電量を増やしたい）：");
         purposeField = new TextField();
 
-        Label aiRead = new Label("BETA版が有効の場合にはAIがアドバイスを生成しますただし少し時間が掛かるよ！");
+        Label aiRead = new Label("AIが有効の場合にはAIがアドバイスを生成しますただし少し時間が掛かるよ！（内容によります)");
 
         progressBar = new ProgressBar();
         progressBar.setVisible(false);
@@ -503,6 +506,8 @@ public class EnergyAdvisorApp extends Application {
         gridPane.add(panelLabel, 0, 4);
         gridPane.add(panelScale, 1, 4);
         gridPane.add(panelCountLabel, 2, 4);
+        gridPane.add(installationTimeLabel, 0, 6);
+        gridPane.add(installationTimeField, 1, 6);
         gridPane.add(sunshineLabel, 0, 5);
         gridPane.add(sunshineScale, 1, 5);
         gridPane.add(sunshineTimeLabel, 2, 5);
@@ -519,7 +524,6 @@ public class EnergyAdvisorApp extends Application {
         generationLabel.setWrapText(true);
         locationLabel.setWrapText(true);
         angleLabel.setWrapText(true);
-        installationTimeLabel.setWrapText(true);
         systemCapacityLabel.setWrapText(true);
         purposeLabel.setWrapText(true);
         aiRead.setWrapText(true);
@@ -554,14 +558,14 @@ public class EnergyAdvisorApp extends Application {
 
     private void toggleBeta() {
         isBetaEnabled = !isBetaEnabled;
-        betaStatusLabel.setText("Beta版: " + (isBetaEnabled ? "有効" : "無効"));
+        betaStatusLabel.setText("AIの使用: " + (isBetaEnabled ? "有効" : "無効"));
         
         if (isBetaEnabled) {
             addBetaComponents((GridPane) betaStatusLabel.getParent());
-            show_ui("変更","Betaモードを「有効」に切り替えました");
+            show_ui("変更","AIの使用を「有効」に切り替えました");
         } else {
             removeBetaComponents((GridPane) betaStatusLabel.getParent());
-            show_ui("変更","Betaモードを「無効」に切り替えました");
+            show_ui("変更","AIの使用を「無効」に切り替えました");
 
         }
         
@@ -569,15 +573,13 @@ public class EnergyAdvisorApp extends Application {
     }
 
     private void addBetaComponents(GridPane gridPane) {
-        gridPane.add(generationLabel, 0, 6);
-        gridPane.add(generationField, 1, 6);
         gridPane.add(locationLabel, 0, 7);
         gridPane.add(locationComboBox, 1, 7);
         gridPane.add(angleLabel, 0, 8);
         gridPane.add(angleScale, 1, 8);
         gridPane.add(currentAngleLabel, 2, 8);
-        gridPane.add(installationTimeLabel, 0, 9);
-        gridPane.add(installationTimeField, 1, 9);
+        gridPane.add(generationLabel, 0, 9);
+        gridPane.add(generationField, 1, 9);
         gridPane.add(systemCapacityLabel, 0, 10);
         gridPane.add(systemCapacityField, 1, 10);
         gridPane.add(purposeLabel, 0, 11);
@@ -593,8 +595,6 @@ public class EnergyAdvisorApp extends Application {
             angleLabel,
             angleScale,
             currentAngleLabel,
-            installationTimeLabel,
-            installationTimeField,
             systemCapacityLabel,
             systemCapacityField,
             purposeLabel,
@@ -608,8 +608,10 @@ public class EnergyAdvisorApp extends Application {
         alert.setTitle("バージョン情報");
         alert.setHeaderText(null);
         alert.setContentText("バージョン:"+ver+"\n" +
-                "①. 新しくストリーミング処理を行う機能を追加。\n" +
-                "②. ただ実験機能だから機能しないときがある。\n" +
+                "①.ストリーミングでエラーが起きる問題を修正。\n" +
+                "②. OpenAIが現時点で故障しているため代わりにHuggingChatプロバイダーを\n"+
+                "Webapiのストリーミングのサポートに追加させたんでそちらを使用します。\n"+
+                "④.その他Beta版からAIにちょい変更しました" +
                 "以上Version"+ver+"の更新履歴です");
         alert.showAndWait();
     }
@@ -625,7 +627,7 @@ public class EnergyAdvisorApp extends Application {
                 "4. AIがアドバイスを生成し、テキストボックスに表示します。\n" +
                 "5.AIは自作のWEBAPIです \n" + 
                 "6.自動更新機能でアプデが楽になります。 \n"+
-                "注意: Beta版が有効の場合、AIがより詳細なアドバイスを提供します");
+                "注意: AIの使用が有効の場合、AIがより詳細なアドバイスを提供します");
         alert.showAndWait();
     }
 
@@ -693,16 +695,16 @@ private void onAnalyzeButtonClick(int panelCount, int sunshineTime, WebEngine we
     String purpose = purposeField.getText();
 
     new Thread(() -> {
-    try {
-        String aiResponse;
-        if (UseDiv.equals("True")) {
-             getAdviceFromAI_stream(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose, webEngine);
-        } else {
-            aiResponse = calculateSolarPower(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
-        
-        String html = markdownToHtml(aiResponse);
-        Platform.runLater(() -> webEngine.loadContent(html));
-        }
+        try {
+            String aiResponse;
+            if (isBetaEnabled && UseDiv.equals("True")) {  // isBetaEnabled と UseDiv が両方 true の場合のみストリーミング処理
+                 getAdviceFromAI_stream(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose, webEngine);
+            } else {
+                // ストリーミング処理が無効の場合は、従来通り処理
+                aiResponse = calculateSolarPower(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
+                String html = markdownToHtml(aiResponse);
+                Platform.runLater(() -> webEngine.loadContent(html));
+            }
     } catch (Exception e) {
     	System.out.println( e.getMessage());
         showError("エラー", "アドバイスの生成中にエラーが発生しました。");
@@ -714,25 +716,72 @@ private void onAnalyzeButtonClick(int panelCount, int sunshineTime, WebEngine we
 }
 
 
-    private String calculateSolarPower(int panelCount, int sunshineTime, String generation, String selectedPrefecture, int angle, String installationYearText, String systemCapacity, String purpose) throws Exception {
-        double powerPerPanel = 0.2; // kW
-        double solarPower = panelCount * sunshineTime * powerPerPanel;
-        String adviceText = "";
+private String calculateSolarPower(int panelCount, int sunshineTime, String generation, String selectedPrefecture, int angle, String installationYearText, String systemCapacity, String purpose) throws Exception {
+    double powerPerPanel = 0.2; // kW
+    double solarPower = panelCount * sunshineTime * powerPerPanel;
+    StringBuilder adviceText = new StringBuilder(); // StringBuilderを使用
+    int installationYear;
 
-        if (solarPower < 1) {
-            adviceText = "<p>現在の発電量は<b>1kWh以下</b>となっています。パネルの数や日照時間を増やすことで、発電量を増やすことが可能です。参考になる資料として、<a href='https://www.enecho.meti.go.jp/category/saving_and_new/saiene/renewable/solar/index.html'>資源エネルギー庁の太陽光発電ガイド</a>をご覧ください。</p>";
-        } else if (solarPower < 5) {
-            adviceText = "<p>現在の発電量は<b>5kWh以下</b>となっています。発電量をさらに向上させるためには、パネルの角度や設置場所を見直すことをお勧めします。参考になる資料として、<a href='https://www.enecho.meti.go.jp/category/saving_and_new/saiene/renewable/solar/index.html'>資源エネルギー庁の太陽光発電ガイド</a>をご覧ください。</p>";
-        } else {
-            adviceText = "<p>素晴らしい！あなたの太陽光発電システムは非常に効率的に動作しています。さらなる効率化のための情報は、<a href='https://www.enecho.meti.go.jp/category/saving_and_new/saiene/renewable/solar/index.html'>資源エネルギー庁の太陽光発電ガイド</a>をご覧ください。</p>";
+    if (installationYearText.isEmpty()) {
+        showError("入力エラー", "設置年を入力してください。");
+        return "<h1>再度設置年を入力してからお願いします</h1>"; // 処理を中断し、空文字を返す
+    } else {
+        installationYear = Integer.parseInt(installationYearText);
+    }
+
+    int systemLife = 20; // 太陽光発電システムの耐用年数
+
+    adviceText.append("<p>"); // 最初に<p>タグを追加
+
+    if (solarPower < 1) {
+        adviceText.append("現在の発電量は<b>1kWh以下</b>と非常に少ないです。<br>");
+        adviceText.append("発電量を増やすための具体的な提案は以下の通りです。<br>");
+        adviceText.append("<ul>"); // リスト表示開始
+        adviceText.append("<li>パネルの数を増やす</li>");
+        adviceText.append("<li>日当たりの良い場所に設置する</li>");
+        adviceText.append("<li>パネルの角度を調整する</li>");
+        adviceText.append("</ul>"); // リスト表示終了
+        adviceText.append("例えば、パネルをあと")
+                .append((int) Math.ceil(1 / (sunshineTime * powerPerPanel)))
+                .append("枚追加すれば、1kWhの発電が期待できます。<br>");
+    } else if (solarPower < 5) {
+        adviceText.append("現在の発電量は<b>5kWh以下</b>です。<br>");
+        adviceText.append("発電効率を上げるための提案は以下の通りです。<br>");
+        adviceText.append("<ul>");
+        adviceText.append("<li>パネルの角度を")
+                .append(angle > 30 ? "少し下げて" : "少し上げて")
+                .append("みる</li>");
+        adviceText.append("<li>日陰になる部分を減らす、反射光を利用するなど、設置場所を見直す</li>");
+        adviceText.append("<li>")
+                .append(installationYear + systemLife - currentYear)
+                .append("年以上経過している場合は、最新のパネルに交換する</li>"); 
+        adviceText.append("</ul>");
+    } else {
+        adviceText.append("素晴らしい！あなたの太陽光発電システムは1日あたり約<b>")
+                .append(solarPower)
+                .append("kWh</b>の電力を生成し、非常に効率的に動作しています。<br>");
+
+        if (2024 - installationYear > systemLife / 2) {
+            adviceText.append("ただし、")
+                    .append(installationYear)
+                    .append("年設置のシステムは、そろそろ交換時期に差し掛かっています。最新のパネルは変換効率が向上しているため、交換を検討してみてはいかがでしょうか。<br>");
         }
 
-        if (isBetaEnabled) {
-            return getAdviceFromAI_streamPost(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
-        } else {
-            return "<p>あなたの太陽光発電システムは、1日あたり約<b>" + solarPower + "kWh</b>の電力を生成します。</p>" + adviceText + "<p>もし詳細な情報を知りたい場合にはBeta版を有効にしてみてください。現時点2024/5/28の段階ではまだ未完成です</p>";
+        if (purpose.equals("電力自給")) {
+            adviceText.append("電力自給率をさらに高めるには、蓄電池の導入を検討するのも良いでしょう。<br>");
+        } else if (purpose.equals("売電")) {
+            adviceText.append("売電収入を増やすためには、発電量の多い時間帯に電力会社に売電できるプランへの変更も有効です。<br>");
         }
     }
+
+    adviceText.append("資源エネルギー庁の太陽光発電ガイドも参考にしてみてください。</p>"); 
+
+    if (isBetaEnabled) {
+        return getAdviceFromAI_streamPost(panelCount, sunshineTime, generation, selectedPrefecture, angle, installationYearText, systemCapacity, purpose);
+    } else {
+        return adviceText.toString() + "<p>もし詳細な情報を知りたい場合にはAIの使用を有効にしてみてください。現時点2024/7/05時点では機能しています</p>";
+    }
+}
 
 
     private void getAdviceFromAI_stream(int panelCount, int sunshineTime, String generation, String selectedPrefecture, int angle, String installationYearText, String systemCapacity, String purpose, WebEngine webEngine) throws Exception {
@@ -749,7 +798,7 @@ private void onAnalyzeButtonClick(int panelCount, int sunshineTime, WebEngine we
         "<li>システム容量: </li>"+
        "</ul>"+
         "<h2>アドバイス:</h2>"+
-        "というような形式でマークダウン形式で出力,セキュリティ関係上これだけしか情報が提供できませんご了承ください";
+        "というような形式であなたはマークダウン形式で出力,セキュリティ関係上これだけしか情報が提供できませんご了承ください";
         URL url = new URL("https://webapi-8trs.onrender.com/stream"); // ストリーミングレスポンスをサポートするURLに変更します。
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -792,7 +841,7 @@ private void onAnalyzeButtonClick(int panelCount, int sunshineTime, WebEngine we
                         String html = markdownToHtml(responseValue);
 
                         String script = "document.body.innerHTML += '" + StringEscapeUtils.escapeEcmaScript(html) + "';";
-                        Platform.runLater(() -> webEngine.executeScript(script));
+                        Platform.runLater(() -> webEngine.executeScript(script)); 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -819,7 +868,7 @@ private String getAdviceFromAI_streamPost(int panelCount, int sunshineTime, Stri
     "<li>システム容量: </li>"+
    "</ul>"+
     "<h2>アドバイス:</h2>"+
-    "というような形式でマークダウン形式で出力,セキュリティ関係上これだけしか情報が提供できませんご了承ください";
+    "というような形式であなたはマークダウン形式で出力をお願いしますまたセキュリティ関係上これだけしか情報が提供できませんご了承ください";
     URI uri = new URI(MainAPIurl);
     Map<String, String> jsonMap = new HashMap<>();
     jsonMap.put("prompt", question);

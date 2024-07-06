@@ -3,7 +3,7 @@
 [English](ReadmeEn.md) | [日本語](Readme.md) 
 
 ### Notice
-- Ver0.9:  Experimental streaming processing using webapi has been implemented. (It's unstable, especially with OpenAI)
+- Ver1.0:  We have updated and optimized the webapi streaming process in this version and plan to release a version with both English and Japanese support in the future.
 
 ### Important Notes
 -  start.exe may not launch if Java environment variables are not set. 
@@ -12,7 +12,7 @@
 ---
 
 ## Update History
-
+- **version 1.0** In this version we have worked on updating the webapi streaming process(July 6, 2024)
 - **Version 0.9:** Added experimental streaming processing with webapi (It's quite difficult in Java...) (June 15, 2024)
 - **Version 0.8:** Implemented updates for version 0.8; support for new webapi parameters. (June 15, 2024)
 - **Version 0.7:**  Intended to release a patch for 0.7, but encountered errors, so releasing 0.6.1 instead. (May 31, 2024)
@@ -29,8 +29,8 @@
 
 ## ToDo List
 
-- [ ] Code optimization
-- [ ] Universal design based UI
+- [x] Code optimization
+- [x] Universal design based UI
 - [ ] Reduce AI error rate
 - [x] Optimize automatic update program 
 - [ ] Improve error handling 
